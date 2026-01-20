@@ -1,3 +1,5 @@
+# pylint: disable=invalid-name
+
 """
 Compute descriptive statistics from a file.
 
