@@ -14,6 +14,7 @@ import time
 def read_numbers(file_path):
     """Read numbers from a file, handling invalid data."""
     numbers = []
+    not_numbers = []
     with open(file_path, "r", encoding="utf-8") as file:
         for line_number, line in enumerate(file, start=1):
             value = line.strip()
@@ -23,8 +24,8 @@ def read_numbers(file_path):
                 number = float(value)
                 numbers.append(number)
             except ValueError:
-                print(f"Invalid data on line {line_number}: '{value}'")
-    return numbers
+                not_numbers.append(value)
+    return numbers, not_numbers
 
 
 def compute_mean(numbers):
@@ -47,7 +48,7 @@ def compute_median(numbers):
 
 
 def compute_mode(numbers):
-    """Compute mode using basic algorithm."""
+    """Compute mode using basic algorithm. Return 'NA' if no mode exists."""
     frequency = {}
     for num in numbers:
         if num in frequency:
@@ -62,7 +63,11 @@ def compute_mode(numbers):
             max_count = value
             mode_value = key
 
+    if max_count == 1:
+        return "#N/D"
+
     return mode_value
+
 
 
 def compute_variance(numbers, mean):
@@ -70,12 +75,15 @@ def compute_variance(numbers, mean):
     total = 0.0
     for num in numbers:
         total += (num - mean) ** 2
-    return total / len(numbers)
+    return total / (len(numbers) - 1)
 
 
-def compute_std_dev(variance):
-    """Compute standard deviation using basic algorithm."""
-    return variance ** 0.5
+def compute_std_dev(numbers, mean):
+    """Compute standard deviation directly from the data (population)."""
+    total = 0.0
+    for num in numbers:
+        total += (num - mean) ** 2
+    return (total / len(numbers)) ** 0.5
 
 
 def main():
@@ -88,7 +96,7 @@ def main():
     start_time = time.time()
 
     try:
-        numbers = read_numbers(file_path)
+        numbers, not_numbers = read_numbers(file_path)
     except FileNotFoundError:
         print(f"File not found: {file_path}")
         sys.exit(1)
@@ -101,14 +109,14 @@ def main():
     median = compute_median(numbers)
     mode = compute_mode(numbers)
     variance = compute_variance(numbers, mean)
-    std_dev = compute_std_dev(variance)
+    std_dev = compute_std_dev(numbers, mean)
 
     elapsed_time = time.time() - start_time
 
     results = (
         "Descriptive Statistics\n"
         "----------------------\n"
-        f"Count: {len(numbers)}\n"
+        f"Count: {len(numbers) + len(not_numbers)}\n"
         f"Mean: {mean}\n"
         f"Median: {median}\n"
         f"Mode: {mode}\n"
