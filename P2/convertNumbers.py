@@ -22,47 +22,48 @@ def read_numbers(file_path):
                 number = int(value)
                 numbers.append(number)
             except ValueError:
-                print(f"Invalid data on line {line_number}: '{value}'")
+                numbers.append(value)
     return numbers
 
 
 def to_binary(number):
-    """Convert an integer to binary using basic algorithm."""
+    """
+    Positive:
+        normal binary, no leading zeros.
+    Negative:
+        two's complement using the MINIMUM number of bits needed
+        (but keeping the sign bit = 1).
+    """
     if number == 0:
         return "0"
 
-    is_negative = number < 0
-    num = abs(number)
-    digits = []
+    # Positive -> normal binary
+    if number > 0:
+        return format(number, "b")
 
-    while num > 0:
-        digits.append(str(num % 2))
-        num //= 2
-
-    result = "".join(reversed(digits))
-    if is_negative:
-        result = "-" + result
-    return result
+    # Negative -> minimal two's complement
+    # bits needed for magnitude + 1 sign bit
+    bits = abs(number).bit_length() + 1
+    mask = (1 << bits) - 1
+    value = number & mask
+    return format(value, "b")
 
 
-def to_hexadecimal(number):
-    """Convert an integer to hexadecimal using basic algorithm."""
+def to_hex(number):
+    """
+    Positive:
+        normal hex, no leading zeros.
+    Negative:
+        32-bit two's complement (8 hex digits).
+    """
     if number == 0:
         return "0"
 
-    hex_map = "0123456789ABCDEF"
-    is_negative = number < 0
-    num = abs(number)
-    digits = []
+    if number > 0:
+        return format(number, "X")
 
-    while num > 0:
-        digits.append(hex_map[num % 16])
-        num //= 16
-
-    result = "".join(reversed(digits))
-    if is_negative:
-        result = "-" + result
-    return result
+    value = number & 0xFFFFFFFF
+    return format(value, "08X")
 
 
 def main():
@@ -85,14 +86,14 @@ def main():
         sys.exit(1)
 
     lines = []
-    lines.append("Number Conversion Results")
-    lines.append("-------------------------")
 
     for num in numbers:
-        binary = to_binary(num)
-        hexa = to_hexadecimal(num)
-        line = f"{num} -> Binary: {binary}, Hexadecimal: {hexa}"
-        lines.append(line)
+        try:
+            binary = to_binary(num)
+            hexa = to_hex(num)
+            lines.append(f"{num}\t{binary}\t{hexa}")
+        except:
+            lines.append(f"{num}\t#VALUE!\t#VALUE!")
 
     elapsed_time = time.time() - start_time
     lines.append("")
@@ -108,3 +109,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
