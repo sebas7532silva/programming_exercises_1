@@ -119,7 +119,7 @@ def main():
 
     print(results)
 
-    with open("StatisticsResults.txt", "w", encoding="utf-8") as output:
+    with open("P1/results/StatisticsResults.txt", "w", encoding="utf-8") as output:
         output.write(results)
 
 

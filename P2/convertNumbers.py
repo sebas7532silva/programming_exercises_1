@@ -102,7 +102,7 @@ def main():
 
     print(result_text)
 
-    with open("ConvertionResults.txt", "w", encoding="utf-8") as output:
+    with open("P2/results/ConvertionResults.txt", "w", encoding="utf-8") as output:
         output.write(result_text)
 
 

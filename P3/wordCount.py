@@ -87,7 +87,7 @@ def main():
 
     print(result_text)
 
-    with open("WordCountResults.txt", "w", encoding="utf-8") as output:
+    with open("P3/results/WordCountResults.txt", "w", encoding="utf-8") as output:
         output.write(result_text)
 
 
