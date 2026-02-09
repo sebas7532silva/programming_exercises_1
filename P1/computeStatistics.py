@@ -16,7 +16,7 @@ def read_numbers(file_path):
     numbers = []
     not_numbers = []
     with open(file_path, "r", encoding="utf-8") as file:
-        for line_number, line in enumerate(file, start=1):
+        for line in file:
             value = line.strip()
             if not value:
                 continue

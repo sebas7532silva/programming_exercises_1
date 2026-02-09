@@ -14,7 +14,7 @@ def read_numbers(file_path):
     """Read numbers from a file, handling invalid data."""
     numbers = []
     with open(file_path, "r", encoding="utf-8") as file:
-        for line_number, line in enumerate(file, start=1):
+        for line in file:
             value = line.strip()
             if not value:
                 continue
@@ -92,7 +92,7 @@ def main():
             binary = to_binary(num)
             hexa = to_hex(num)
             lines.append(f"{num}\t{binary}\t{hexa}")
-        except:
+        except ValueError:
             lines.append(f"{num}\t#VALUE!\t#VALUE!")
 
     elapsed_time = time.time() - start_time
@@ -109,4 +109,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
